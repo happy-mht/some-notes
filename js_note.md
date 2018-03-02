@@ -163,9 +163,25 @@ fn2() // simple-demo.html:31 Uncaught TypeError: fn2 is not a function
     </div>
     <script>
         var obj = {}
+        function defineReactive(ob, key){
+            Object.defineProperty(ob,key,{
+                get:function(){
+                    return key;
+                },
+                set:function(newValue){
+                    if(newValue!=key){
+                        ob[key] = newValue;
+                        update();
+                    }  
+                }
+            })
+        }
+        function update(){
+            
+        }
         Object.defineProperty(obj, 'msg', {
             get: function () {
-                return obj
+                return obj.msg
             },
             set: function (newValue) {
                 document.getElementById('txt').value = newValue
