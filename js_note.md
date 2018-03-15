@@ -203,3 +203,7 @@ fn2() // simple-demo.html:31 Uncaught TypeError: fn2 is not a function
 ## Vue 组件 data 为什么必须是函数。
 
 当多个组件共享一个data时， 改变data 会影响所有组件！**解决js中对象引用传递带来的问题.**
+
+## 作用域（词法作用域）
+
+    一个作用域内的代码可以访问这个作用域内以及任何包围在它之外的作用域中的变量

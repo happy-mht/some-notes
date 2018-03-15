@@ -3,6 +3,14 @@
 
     理解Event loop，对于浏览器（或者nodejs）处理事件的过程会有更透彻的理解，使用promise,nextTick, setImmediate, setTimeout 等会更清晰. 本文主要是基于浏览器端来理解的。
 
+事件循环队列类似于一个游乐园游戏：玩过了一个游戏之后，你需要重新到队尾排队才能再玩一次。而任务队列类似于玩过玩过了游戏之后，插队接着继续玩。
+
+**任务队列**：是挂在事件循环队列的每个 tick 之后的一个队列。在事件循环的每个 tick 中，可能出现的异步动作不会导致一个完整的新事件添加到事件循环队列中，而会在当前tick的任务队列末尾添加一个项目（一个任务）。
+
+**Promise的异步特性是基于任务的**
+
+一旦有事件需要运行，事件循环就会进行，知道队列清空。事件循环的每一轮称为一个 tick。用户交互、IO和定时器会向事件队列中加入事件。
+
 参考自：
 - [Tasks, microtasks, queues and schedules](https://link.jianshu.com/?t=https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/?utm_source=html5weekly&utm_medium=email)
 - [What the heck is the event loop anyway?](https://link.jianshu.com/?t=http://2014.jsconf.eu/speakers/philip-roberts-what-the-heck-is-the-event-loop-anyway.html)
