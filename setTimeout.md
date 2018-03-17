@@ -1,4 +1,4 @@
-# js 定时器笔试题
+# (前端面试题) js for循环 + setTimeout 
 
 1. 分析以下代码实际运行的结果：
 
@@ -125,4 +125,27 @@ Tue Mar 06 2018 13:52:24 GMT+0800 (中国标准时间) 2
 Tue Mar 06 2018 13:52:25 GMT+0800 (中国标准时间) 3
 Tue Mar 06 2018 13:52:26 GMT+0800 (中国标准时间) 4
 Tue Mar 06 2018 13:52:27 GMT+0800 (中国标准时间) 5
+```
+
+8. 使用 Promise
+
+```js
+function delay(time) {
+    return new Promise(function(resolve, reject) {
+        setTimeout(resolve, time);
+    })
+}
+for (let i = 0; i < 5; i++) {
+    delay(i * 1000).then(() => console.log(new Date, i))
+}
+```
+
+输出如下
+
+```console
+Fri Mar 16 2018 09:57:04 GMT+0800 (中国标准时间) 0
+Fri Mar 16 2018 09:57:05 GMT+0800 (中国标准时间) 1
+Fri Mar 16 2018 09:57:06 GMT+0800 (中国标准时间) 2
+Fri Mar 16 2018 09:57:07 GMT+0800 (中国标准时间) 3
+Fri Mar 16 2018 09:57:08 GMT+0800 (中国标准时间) 4
 ```

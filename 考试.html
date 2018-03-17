@@ -10,13 +10,13 @@
 
 <body>
     <script>
-        var A = [2, 2, 2];
-        var w = [2, 2, 2];
-        var inside = true;
-        for (i = 0; i < 3; i++) {
-            if (w[i] < 1 || w[i] > A[i]) {
-                var inside = false;
-            }
+        function delay(time) {
+            return new Promise(function(resolve, reject) {
+                setTimeout(resolve, time);
+            })
+        }
+        for (let i = 0; i < 5; i++) {
+            delay(i * 1000).then(() => console.log(new Date, i))
         }
     </script>
 </body>
