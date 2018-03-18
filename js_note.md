@@ -163,42 +163,12 @@ fn2() // simple-demo.html:31 Uncaught TypeError: fn2 is not a function
 - location.href 是页面跳转，刷新页面
 
 ## Vue 双向绑定实现原理？ 如何实现
-```html
-    <div id="app">
-        <input type="text" id="txt">
-        <p id="show-txt"></p>
-    </div>
-    <script>
-        var obj = {}
-        function defineReactive(ob, key){
-            Object.defineProperty(ob,key,{
-                get:function(){
-                    return key;
-                },
-                set:function(newValue){
-                    if(newValue!=key){
-                        ob[key] = newValue;
-                        update();
-                    }  
-                }
-            })
-        }
-        function update(){
-            
-        }
-        Object.defineProperty(obj, 'msg', {
-            get: function () {
-                return obj.msg
-            },
-            set: function (newValue) {
-                document.getElementById('txt').value = newValue
-                document.getElementById('show-txt').innerHTML = newValue
-            }
-        })
-        document.addEventListener('keyup', function (e) {
-            obj.msg = e.target.value
-        })
-    </script>
+
+```js
+ //观察者--》变量侦测--》收集依赖--》通知依赖变化
+ //节点编译--》依赖者
+
+
 ```
 ## Vue 组件 data 为什么必须是函数。
 
@@ -207,3 +177,21 @@ fn2() // simple-demo.html:31 Uncaught TypeError: fn2 is not a function
 ## 作用域（词法作用域）
 
     一个作用域内的代码可以访问这个作用域内以及任何包围在它之外的作用域中的变量
+
+## 另一种方式实现 Vue 的响应式原理
+
+Vue 的响应式原理是使用 Object.defineProperty 追踪依赖，当属性被访问或改变时通知变化。
+
+有两个不足之处：
+
+不能检测到增加或删除的属性。
+数组方面的变动，如根据索引改变元素，以及直接改变数组长度时的变化，不能被检测到。
+原因差不多，无非就是没有被 getter/setter 。
+
+第一个比较容易理解，为什么数组长度不能被 getter/setter ？
+
+在知乎上找了一个答案：如果你知道数组的长度，理论上是可以预先给所有的索引设置 getter/setter 的。但是一来很多场景下你不知道数组的长度，二来，如果是很大的数组，预先加 getter/setter 性能负担较大。
+
+现在有一个替代的方案 Proxy，但这东西兼容性不好，迟早要上的。
+
+Proxy，在目标对象之前架设一层拦截。具体，可以参考 http://es6.ruanyifeng.com/#docs/reference

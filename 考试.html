@@ -10,14 +10,16 @@
 
 <body>
     <script>
-        function delay(time) {
-            return new Promise(function(resolve, reject) {
-                setTimeout(resolve, time);
-            })
-        }
-        for (let i = 0; i < 5; i++) {
-            delay(i * 1000).then(() => console.log(new Date, i))
-        }
+        Promise.prototype.finally = function(callback) {
+            let P = this.constructor;
+            return this.then(
+                value => P.resolve(callback()).then(() => value),
+                reason => P.resolve(callback()).then(() => {
+                    throw reason
+                })
+            );
+        };
+        var p = Promise.resolve(12).finally(() => 2 / a)
     </script>
 </body>
 
