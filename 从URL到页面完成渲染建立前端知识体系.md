@@ -53,7 +53,7 @@
   - IFC（Inline Formatting Context）
   - 其它
 
--JS引擎解析过程
+- JS引擎解析过程
   - JS的解释阶段
   - JS的预处理阶段
   - JS的执行阶段
@@ -82,3 +82,11 @@
     8. JS引擎解析过程（JS的解释阶段，预处理阶段，执行阶段生成执行上下文，VO，作用域链、回收机制等等）
 
     9. 其它（可以拓展不同的知识模块，如跨域，web安全，hybrid模式等等内容）
+
+### 1. 从浏览器接收url到开启网络请求线程
+
+#### [浏览器的进程和线程](https://github.com/mht1993/some-notes/blob/master/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B.md)
+
+### 解析URL
+
+### [js event loop](http://www.ruanyifeng.com/blog/2014/10/event-loop.html)
