@@ -76,7 +76,9 @@
 - 500 Internal Server Error 
 
       服务器执行请求时发生错误
+- 502 Bad Gateway
 
+      对用户访问请求的响应超时造成的
 - 503 Service Unavailable
 
       服务器暂时处于超负载或正在停机维护，无法处理请求

@@ -57,6 +57,7 @@ isNaN(false) // -->false
 第三种的缺点是，缺点还是很多的……，如果传入的参数本身就是字符串的话，返回的结果是带双引号的，如下面：
 JSON.stringify("123");    //""123""
 如果传入的是Object还要确保没有递归引用，否则会抛出异常，如下面
+
 ```javascript
 var a = {},b = {};
 a.param = b;
@@ -64,14 +65,18 @@ b.param = a;
 JSON.string(a);
 //Uncaught TypeError: Converting circular structure to JSON
 ```
+
 3. 有哪些值强制转换成布尔类型时结果为false？
+
 - undefined
 - 0
 - ""
 - null
 - NaN
 - false
+
 4. 什么样的处理可以使得下面的代码输出为true？
+
 ```javascript
 var s;
 /**
@@ -80,6 +85,7 @@ var s;
 console.log(s == 5 && s== 6) // 输出true
 ```
 注意：每次类型转换都会调用变量的valueOf()方法，除了日期类型变量
+
 ```javascript
 var s;
 var i=5;
@@ -88,9 +94,12 @@ s = {
 }
 console.log(s == 5 && s== 6) 
 ```
+
 5. 将一个变量强制转换为数字类型时，都进行了哪些操作？
+
 将变量强制转换为数字遵循的是ToNumber操作。
 对于基本类型的话：
+
 - true → 1
 - false → 0
 - undefined → NaN
@@ -117,13 +126,14 @@ fn2() // simple-demo.html:31 Uncaught TypeError: fn2 is not a function
 ```
 
 ## var let const
+
 为什么 var 可以重复声明？
 
 在JS代码运行过程中：引擎负责整个代码的编译以及运行，编译器则负责词法分析、语法分析、代码生成等工作而作用域则如我们熟知的一样，负责维护所有的标识符（变量）。
 
 当我们执行 `var a = 0` 时，我们可以简单的理解为新变量分配一块儿内存，命名为a，并赋值为2，但在运行的时候编译器与引擎还会进行两项额外的操作：判断变量是否已经声明：
 
-1.首先编译器对代码进行分析拆解，从左至右遇见 `var a`, 则编译器会询问作用域是否已经存在叫 `a` 的变量了, 如果不存在, 则招呼作用域声明一个新的变量 `a`, 若已经存在，则忽略 `var` 继续向下编译，这时`a = 2` 被编译成可执行的代码供引擎使用。
+1. 首先编译器对代码进行分析拆解，从左至右遇见 `var a`, 则编译器会询问作用域是否已经存在叫 `a` 的变量了, 如果不存在, 则招呼作用域声明一个新的变量 `a`, 若已经存在，则忽略 `var` 继续向下编译，这时`a = 2` 被编译成可执行的代码供引擎使用。
 
 2. 引擎遇见 `a=2` 时同样会询问在当前的作用域下是否有变量a, 若存在, 则将 a 赋值为 2 (**由于第一步编译器忽略了重复声明的var，且作用域中已经有a，所以重复声明会发生值得覆盖, 并不会报错**)。若不存在，则顺着作用域链向上查找，若最终找到了变量 `a` 则将其赋值2，若没有找到，则招呼作用域声明一个变量 `a` 并赋值为2。
 
@@ -195,3 +205,100 @@ Vue 的响应式原理是使用 Object.defineProperty 追踪依赖，当属性�
 现在有一个替代的方案 Proxy，但这东西兼容性不好，迟早要上的。
 
 Proxy，在目标对象之前架设一层拦截。具体，可以参考 http://es6.ruanyifeng.com/#docs/reference
+
+## 箭头函数没有自己的this，导致内部的this就是外层代码块的this。
+
+```js
+function foo() {
+    setTimeout(() => {
+        console.log(this.id)
+    }, 0)
+}
+foo.call({
+        id: 1
+    }) // 1
+
+function bar() {
+    setTimeout(function() {
+        console.log(this.id)
+    }, 0);
+}
+bar.call({
+        id: 2
+    }) // undefined
+```
+
+## 什么情况下会碰到跨域问题？有哪些解决方法？
+
+跨域问题是这是浏览器为了安全实施的同源策略导致的，同源策略限制了来自不同源的document、脚本，同源的意思就是两个URL的域名、协议、端口要完全相同。
+
+`script` 标签 `jsonp` 跨域、`nginx` 反向代理、`node.js`中间件代理跨域、后端在头部信息设置安全域名、后端在服务器上设置`cors`。
+
+目前来讲没有不依靠服务器端来跨域请求资源的技术
+
+1. `jsonp` 需要目标服务器配合一个 `callback` 函数。
+
+2. `window.name+iframe` 需要目标服务器响应 `window.name`。
+
+3. `window.location.hash+iframe` 同样需要目标服务器作处理。
+
+4. html5的 `postMessage+ifrme` 这个也是需要目标服务器或者说是目标页面写一个`postMessage`，主要侧重于前端通讯。
+
+5. `CORS` 跨域资源共享需要服务器设置`header`：`Access-Control-Allow-Origin`。`Access-Control-Allow-Methods` 首部字段用于预检请求的响应。其指明了实际请求所允许使用的 HTTP 方法。
+
+6. `nginx`反向代理 这个方法一般很少有人提及，但是他可以不用目标服务器配合，不过需要你搭建一个中转`nginx`服务器，用于转发请求。
+
+### `nginx` 反向代理
+
+若想用 `test.local.com` 访问页面 `http://127.0.0.1:8082/`
+
+首先需要在hosts文件中添加如下配置：`127.0.0.1 test.local.com`
+
+然后再 `Nginx` 的 `http` 模块上添加一个 `server`
+
+```conf
+server {
+    listen       3001;
+    server_name  test.local.com;
+
+    charset utf-8;
+
+    # 访问本地前端SPA项目host
+    location / {
+        proxy_pass http://localhost:8082;
+        proxy_connect_timeout 1;
+        proxy_send_timeout 30;
+        proxy_read_timeout 60;
+    }
+
+    # 访问服务器的host
+    location /server/ {
+        proxy_pass http://172.16.7.158:8080/;
+    }
+}
+```
+
+## package.json里面的dependencies 和devDependencies的差异!其实不严格的话,没有特别的差异;若是严格,遵循官方的理解;
+
+`dependencies` : 存放线上或者业务能访问的核心代码模块,比如 `vue`,`vue-router`;
+
+`devDependencies`: 处于开发模式下所依赖的开发模块,也许只是用来解析代码,转义代码,但是不产生额外的代码到生产环境, 比如什么`babel-core`这些
+
+## 介绍Vue.js
+
+Vue.js是JavaScript MVVM（Model-View-ViewModel）库，十分简洁，Vue核心只关注视图层。
+
+Vue是以数据为驱动的，Vue自身将DOM和数据进行绑定，一旦创建绑定，DOM和数据将保持同步，每当数据发生变化，DOM会跟着变化。
+
+ViewModel是Vue的核心，它是Vue的一个实例。Vue实例是作用域某个HTML元素上的，这个HTML元素可以是body，也可以是某个id所指代的元素。
+
+`DOM Listeners`和`Data Bindings`是实现双向绑定的关键。`DOM Listeners`监听页面所有`View`层`DOM`元素的变化，当发生变化，`Model`层的数据随之变化；`Data Bindings`监听`Model`层的数据，当数据发生变化，`View`层的`DOM`元素随之变化。
+
+Vue.js特点
+
+- 简洁：页面由HTML模板+Json数据+Vue实例组成
+- 数据驱动：自动计算属性和追踪依赖的模板表达式
+- 组件化：用可复用、解耦的组件来构造页面
+- 轻量：代码量小，不依赖其他库
+- 快速：精确有效批量DOM更新
+- 模板友好：可通过npm，bower等多种方式安装，很容易融入
