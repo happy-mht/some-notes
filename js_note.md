@@ -172,14 +172,6 @@ fn2() // simple-demo.html:31 Uncaught TypeError: fn2 is not a function
 - router 是 hash 改变
 - location.href 是页面跳转，刷新页面
 
-## Vue 双向绑定实现原理？ 如何实现
-
-```js
- //观察者--》变量侦测--》收集依赖--》通知依赖变化
- //节点编译--》依赖者
-
-
-```
 ## Vue 组件 data 为什么必须是函数。
 
 当多个组件共享一个data时， 改变data 会影响所有组件！**解决js中对象引用传递带来的问题.**
@@ -290,9 +282,7 @@ Vue.js是JavaScript MVVM（Model-View-ViewModel）库，十分简洁，Vue核心
 
 Vue是以数据为驱动的，Vue自身将DOM和数据进行绑定，一旦创建绑定，DOM和数据将保持同步，每当数据发生变化，DOM会跟着变化。
 
-ViewModel是Vue的核心，它是Vue的一个实例。Vue实例是作用域某个HTML元素上的，这个HTML元素可以是body，也可以是某个id所指代的元素。
-
-`DOM Listeners`和`Data Bindings`是实现双向绑定的关键。`DOM Listeners`监听页面所有`View`层`DOM`元素的变化，当发生变化，`Model`层的数据随之变化；`Data Bindings`监听`Model`层的数据，当数据发生变化，`View`层的`DOM`元素随之变化。
+Vue.js是一款MVVM框架，通过响应式在修改数据的时候更新视图。Vue.js的响应式原理依赖于`Object.defineProperty`，尤大大在Vue.js文档中就已经提到过，这也是Vue.js不支持IE8 以及更低版本浏览器的原因。Vue通过设定对象属性的 `setter/getter` 方法来监听数据的变化，通过g`etter`进行依赖收集，而每个`setter`方法就是一个观察者，在数据变更的时候通知订阅者更新视图。
 
 Vue.js特点
 
@@ -302,3 +292,19 @@ Vue.js特点
 - 轻量：代码量小，不依赖其他库
 - 快速：精确有效批量DOM更新
 - 模板友好：可通过npm，bower等多种方式安装，很容易融入
+
+Vue 实现的响应式原理：
+
+![vue](./vue.png)
+
+这张图比较清晰地展示了整个流程，首先通过一次渲染操作触发Data的getter（这里保证只有视图中需要被用到的data才会触发getter）进行依赖收集，这时候其实Watcher与data可以看成一种被绑定的状态（实际上是data的闭包中有一个Deps订阅着，在修改的时候会通知所有的Watcher观察者），在data发生变化的时候会触发它的setter，setter通知Watcher，Watcher进行回调通知组件重新渲染的函数，之后根据diff算法来决定是否发生视图的更新。
+
+- `defineReactive` (在Observer 类中) 的作用是通过`Object.defineProperty`为数据定义上`getter\setter`方法，进行依赖收集后闭包中的`Deps`会存放`Watcher`对象。触发`setter`改变数据的时候会通知`Deps`订阅者通知所有的`Watcher`观察者对象进行试图的更新。
+
+- 其实`Dep`就是一个发布者，可以订阅多个观察者，依赖收集之后Deps中会存在一个或多个`Watcher`对象，在数据变更的时候通知所有的`Watcher`。
+
+- `Watcher`是一个观察者对象。依赖收集以后Watcher对象会被保存在Deps中，数据变动的时候会由于Deps通知Watcher实例，然后由Watcher实例回调cb进行实图的更新。
+
+Vue在初始化组件数据时，在生命周期的beforeCreate与created钩子函数之间实现了对data、props、computed、methods、events以及watch的处理。
+
+在Vue中不能像直接通过数组的下标或者设置length来修改数组，可以通过[Vue.set以及splice方法](https://cn.vuejs.org/v2/guide/list.html#%E6%9B%BF%E6%8D%A2%E6%95%B0%E7%BB%84)。
