@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        div {
+            border: 1px solid #ccc;
+        }
+        
+        h4 {
+            margin: 5px 0;
+        }
+        
+        .outer {
+            position: relative;
+            height: 50px;
+        }
+        
+        .inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .inner2 {
+            width: 100px;
+            height: 30px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -50px;
+            margin-top: -15px;
+            /* 单行文本垂直居中使用line-height=height即可 */
+            line-height: 30px;
+        }
+        
+        .flex {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+        }
+        
+        .pad {
+            padding: 20px;
+        }
+        
+        .table {
+            /* display: table/table-cell的div不会默认沾满父级容器  */
+            display: table-cell;
+            height: 50px;
+            width: 200px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .table div {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body>
+    <h4>1、子元素不定宽高，使用绝对定位+transform</h4>
+    <div class="outer">
+        <div class="inner">this is inner1</div>
+    </div>
+
+    <h4>2、子元素定宽高，使用绝对定位+负外边距</h4>
+    <div class="outer">
+        <div class="inner2">this is inner2</div>
+    </div>
+
+    <h4>3、使用flex布局</h4>
+    <div class="flex">
+        <div>this is flex</div>
+    </div>
+
+    <h4>4、父级设置padding，不设置宽高，宽高由子元素撑开</h4>
+    <div class="pad">
+        <div>this is padding</div>
+    </div>
+
+    <h4>5、使用table布局</h4>
+    <div class="table">
+        <div>this is a table</div>
+    </div>
+
+    <!-- 绝对定位的元素中div不会默认沾满父级容器 -->
+    <div style="position: absolute;">绝对定位的元素中div不会默认沾满父级容器</div>
+</body>
+
+</html>
