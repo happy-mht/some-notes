@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .element {
+            *background-color: blue;
+            /* IE6+7, doesn't work in IE8/9 as IE7 */
+        }
+        /* *html *前缀只对IE6生效 */
+        
+        *html {
+            color: tomato;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>CSS hack方式一：条件注释法</h3>
+    <!--[if IE]>
+	这段文字只在IE9以下的浏览器显示
+  <![endif]-->
+    <hr>
+    <!--[if IE 7]>
+	这段文字只在IE7浏览器显示
+  <![endif]-->
+    <hr>
+    <!--[if gte IE 6]>
+	这段文字只在IE6以上(包括)版本IE浏览器显示
+  <![endif]-->
+    <hr>
+    <!--[if ! IE 8]>
+	这段文字在非IE8浏览器显示
+  <![endif]-->
+    <hr>
+    <!--[if !IE]>
+	这段文字只在非IE浏览器显示
+  <![endif]-->
+
+    <h3>CSS hack方式二：类内属性前缀法</h3>
+    <div class="element">
+        IE6+7下背景为蓝色
+    </div>
+    <h3>CSS hack方式三：选择器前缀法</h3>
+    *html *前缀只对IE6生效
+</body>
+
+</html>
