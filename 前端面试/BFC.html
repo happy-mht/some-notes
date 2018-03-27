@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        div {
+            border: 1px solid #ccc;
+            margin: 5px;
+        }
+    </style>
+    <style type="text/css">
+        div {
+            border: solid red;
+            max-width: 70ex;
+        }
+        
+        .float h4 {
+            float: left;
+            margin: 0;
+            border: 1px solid red;
+        }
+        
+        .float p {
+            width: 400px;
+            margin: 0 auto;
+        }
+        
+        .float p::first-line {
+            text-transform: uppercase;
+        }
+        
+        .float p::first-letter {
+            font-size: 3em;
+            border: 1px solid black;
+            background: red;
+            float: left;
+            padding: 2px;
+            margin-right: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <h4>this is first BFC</h4>
+    <div class="first">
+        <div class="a">
+            <p>this is first container</p>
+        </div>
+        <div class="content">
+            this is content in first container
+        </div>
+    </div>
+    <h4>this is second BFC</h4>
+    <div class="second">
+        <div class="b">
+            <p>this is second container</p>
+        </div>
+        <div class="content">
+            this is content in second container
+        </div>
+    </div>
+
+    <div class="float">
+        <h4>HELLO!</h4>
+        <div> This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text. This is some text.
+        </div>
+        <p>This is my very important paragraph. I am a distinguished gentleman of such renown that my paragraph needs to be styled in a manner befitting my majesty. Bow before my splendour, dear students, and go forth and learn CSS!</p>
+    </div>
+</body>
+
+</html>

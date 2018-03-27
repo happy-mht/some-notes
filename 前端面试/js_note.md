@@ -153,20 +153,6 @@ fn2() // simple-demo.html:31 Uncaught TypeError: fn2 is not a function
 1. 遍历对象
 2. 转换为字符串：使用 JSON.stringify(obj1) == JSON.stringify(obj2)
 
-## 项目做过哪些性能优化？
-
-1. 减少 HTTP 请求数
-2. 浏览器缓存数据
-3. 减少 DNS 查询
-4. 避免重定向
-5. 图片懒加载
-6. 减少 DOM 操作
-7. 使用外部的 JavaScript和 css
-8. 压缩JavaScript、css、字体和图片
-9. 使用 iconfont
-10. 避免 `src=""`
-11. 把脚本放在页面底部
-
 ## Vue router 跳转和 location.href 有什么区别？
 
 - router 是 hash 改变
