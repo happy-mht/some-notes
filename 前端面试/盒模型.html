@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .a.b {
+            border: 10px solid red;
+            width: 100px;
+            height: 100px;
+            padding: 10px;
+            margin: 10px;
+            background: blue;
+            /*IE盒模型：盒子的总宽度为100px*/
+            box-sizing: border-box;
+            /*标注盒模型：盒子的总宽度为100+(10+10)*2=140px*/
+            box-sizing: content-box;
+        }
+        
+        .b {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- box-sizing:content-box; (content-box的width不包括padding和border)
+       border-box的width包括padding和border-->
+    <div class="a b">
+
+    </div>
+    <script>
+        // 把字符串转换为整数，含有非法数字时返回0
+        strToInt = str => {
+            let num = 0;
+            let flag = true;
+            str = str.trim();
+            if (typeof str == Object) {
+                return NaN;
+            }
+            if (str[0] == '+' || str[0] == '-') {
+                if (str[0] == '-') flag = false;
+                str = str.slice(1);
+            }
+            if (str == '') {
+                return 0;
+            }
+            for (let i of str) {
+                num = i - 0 + num * 10;
+            }
+            if (Math.abs(num) > Number.MAX_VALUE) return flag ? Infinity : -Infinity;
+            if (num < Number.MIN_VALUE) return 0;
+            return num;
+        }
+        console.log(strToInt('100'))
+    </script>
+</body>
+
+</html>
