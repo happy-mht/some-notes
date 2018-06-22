@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script> -->
+	<!-- 从服务器返回，能保证前后端使用的版本一致 -->
+	<script src="http://localhost:9999/socket.io/socket.io.js"></script>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="jquery-2.2.0.min.js"></script>
+</head>
+<body>
+	<p>websocket</p>
+用户： <input type="text" name="" id="user"><br>
+密码： <input type="password" name="" id="pass"><br>
+<input type="button" name="" value="注册" id="btn">
+<input type="button" name="" value="登录" id="btn2">
+<hr>
+<textarea id="text1" col="80" rows="4"></textarea>
+<input type="button" value="发送" id="btn_send">
+<ul id="ul">
+	<!-- <li>
+		<h4>张三</h4>
+		<p>zhagnsan 的信息</p>
+	</li> -->
+
+</ul>
+<script type="text/javascript">
+	let sock = io.connect("ws://localhost:9999/");
+    let cur_usr = '';
+	sock.on('reg_ret',(code,msg)=>{
+		if(code){
+			alert('注册失败'+msg)
+		}else{
+			alert('注册成功')
+		}
+	})
+	sock.on('login_ret',(code,msg)=>{
+		if(code){
+			alert('登录失败'+msg)
+		}else{
+			alert('登录成功')
+			cur_usr=
+		}
+	})
+
+	sock.on('msg_ret',(code,msg)=>{
+		if(code){
+			alert('消息发送失败'+msg)
+		}else{
+			alert('消息发送成功')
+		}
+	})
+
+
+	$(function () {
+		$('#btn').click(()=>{
+			sock.emit('reg',$('#user').val(),$('#pass').val());
+			
+		})
+
+		$('#btn2').click(()=>{
+			sock.emit('login',$('#user').val(),$('#pass').val());
+		})
+
+		$('#btn_send').click(()=>{
+			sock.emit('msg',$('#text1').val());
+		})
+	})
+</script>
+</body>
+</html>
