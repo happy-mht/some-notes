@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .box {
+            width: 256px;
+            height: 256px;
+            border-bottom: 1px dashed #ccc;
+            text-align: justify;
+        }
+        
+        .box:before {
+            content: "";
+            display: inline-block;
+            height: 100%;
+        }
+        
+        .box:after {
+            content: "";
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .bar {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: red;
+        }
+        
+        dot {
+            display: inline-block;
+            height: 1em;
+            overflow: hidden;
+            line-height: 1;
+            text-align: left;
+            vertical-align: -0.25em;
+        }
+        
+        dot::before {
+            content: '...\A..\A.';
+            display: block;
+            white-space: pre-wrap;
+            animation: dot 3s infinite step-start both;
+        }
+        
+        @keyframes dot {
+            33% {
+                transform: translateY(-2em);
+            }
+            66% {
+                transform: translateY(-1em);
+            }
+        }
+        
+        .box1 {
+            width: 200px;
+            height: 200px;
+        }
+        
+        span {
+            padding: 50%;
+            background: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box" class="box"><i class="bar"></i>
+        <i class="bar"></i>
+        <i class="bar"></i>
+        <i class="bar"></i>
+    </div>
+    <p><button id="button">再增加一条数据</button></p>
+    <dot>...</dot>
+    <div class="box1">
+        <span>xx</span>
+        <span></span>
+    </div>
+
+</body>
+
+</html>

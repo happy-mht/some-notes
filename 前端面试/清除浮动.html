@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>清除浮动</title>
+    <style>
+        .box {
+            border: 1px solid;
+            width: 250px;
+        }
+        
+        .float {
+            float: left;
+        }
+        
+        .baseline {
+            display: inline-block;
+            width: 150px;
+            height: 150px;
+            border: 10x solid #cad5eb;
+            background-color: aqua;
+            line-height: 0;
+        }
+        
+        .container {
+            text-align: justify;
+            width: 350px;
+            /* border: 10x solid #cad5eb; */
+            background: aqua;
+            line-height: 0;
+        }
+        
+        .justify-fix {
+            display: inline-block;
+            width: 100px;
+            outline: 1px dashed darkorange;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="float">
+            <img src="D:/boy.jpg"></img>
+            点击司法鉴定所弗兰克当机立断江傲视发电量将割发代首
+        </div>
+
+    </div>
+    <span class="baseline">x</span>
+    <span class="baseline"></span>
+    <hr>
+    <div class="container">
+        <img src="d:/boy.jpg" width="100"></img>
+        <img src="d:/boy.jpg" width="100"></img>
+        <img src="d:/boy.jpg" width="100"></img>
+        <img src="d:/boy.jpg" width="100"></img>
+        <i class="justify-fix">&nbsp;</i>
+        <i class="justify-fix"></i>
+        <i class="justify-fix"></i>x-baseline
+    </div>
+    <div style="border:1px solid;">
+        <img src="d:/boy.jpg" alt="" srcset="">x
+    </div>
+</body>
+
+</html>
