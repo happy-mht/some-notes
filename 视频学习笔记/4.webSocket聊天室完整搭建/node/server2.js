@@ -92,9 +92,10 @@ wsServer.on('connection',sock => {
 		if(!txt){
 			sock.emit('msg_ret',1,'消息文本不能为空')
 		}else{
+			console.log(aSock.length)
 			aSock.forEach(item=>{
 				if(item==sock) return;
-				item.emit('msg',txt);
+				item.emit('msg',cur_usr,txt);
 			})
 			sock.emit('msg_ret', 0, '发送成功')
 		}

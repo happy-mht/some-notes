@@ -7,6 +7,11 @@
 	<script src="http://localhost:9999/socket.io/socket.io.js"></script>
 	<meta charset="utf-8">
 	<script type="text/javascript" src="jquery-2.2.0.min.js"></script>
+	<style type="text/css">
+		.mine{
+			background-color: green;
+		}
+	</style>
 </head>
 <body>
 	<p>websocket</p>
@@ -15,7 +20,7 @@
 <input type="button" name="" value="注册" id="btn">
 <input type="button" name="" value="登录" id="btn2">
 <hr>
-<textarea id="text1" col="80" rows="4"></textarea>
+<textarea id="text1" col="80" rows="4"></textarea><br>
 <input type="button" value="发送" id="btn_send">
 <ul id="ul">
 	<!-- <li>
@@ -39,16 +44,32 @@
 			alert('登录失败'+msg)
 		}else{
 			alert('登录成功')
-			cur_usr=
+			cur_usr=$("#user").val();
 		}
 	})
-
+    // 发送消息
 	sock.on('msg_ret',(code,msg)=>{
 		if(code){
 			alert('消息发送失败'+msg)
 		}else{
-			alert('消息发送成功')
+			$('#ul').append(`
+				<li class="mine">
+				  <h4>${cur_usr}</h4>
+				  <p>${$('#text1').val()}</p>
+				</li>
+			`)
+			$('#text1').val('');
 		}
+	})
+    // 接到消息
+	sock.on('msg',(cur_usr,text)=>{
+
+		$('#ul').append(`
+			<li>
+			  <h4>${cur_usr}</h4>
+			  <p>${text}</p>
+			</li>
+		`)
 	})
 
 
