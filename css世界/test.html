@@ -1,86 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <title></title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>width demo</title>
     <style>
-        .box {
-            width: 256px;
-            height: 256px;
-            border-bottom: 1px dashed #ccc;
-            text-align: justify;
+        body {
+            background: yellow;
         }
         
-        .box:before {
-            content: "";
-            display: inline-block;
-            height: 100%;
+        button {
+            font-size: 12px;
+            margin: 2px;
         }
         
-        .box:after {
-            content: "";
-            display: inline-block;
+        p {
+            margin-right: 140px;
+        }
+        
+        div {
+            color: red;
+            font-weight: bold;
+        }
+        /* 右浮动，图片DOM在后，和视觉表现一致 */
+        
+        .box-right-same>.full {
             width: 100%;
+            float: left;
         }
         
-        .bar {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            background: red;
+        .box-right-same>.full>p {
+            margin-right: 220px;
         }
         
-        dot {
-            display: inline-block;
-            height: 1em;
+        .box-right-same>img {
+            float: left;
+            margin-left: -220px;
+        }
+        
+        .box {
             overflow: hidden;
-            line-height: 1;
-            text-align: left;
-            vertical-align: -0.25em;
         }
         
-        dot::before {
-            content: '...\A..\A.';
-            display: block;
-            white-space: pre-wrap;
-            animation: dot 3s infinite step-start both;
-        }
-        
-        @keyframes dot {
-            33% {
-                transform: translateY(-2em);
-            }
-            66% {
-                transform: translateY(-1em);
-            }
-        }
-        
-        .box1 {
-            width: 200px;
-            height: 200px;
-        }
-        
-        span {
-            padding: 50%;
-            background: #ccc;
+        li {
+            float: left;
+            margin-right: 10px;
+            width: 100px;
+            border: 1px solid darkkhaki;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 
 <body>
-    <div id="box" class="box"><i class="bar"></i>
-        <i class="bar"></i>
-        <i class="bar"></i>
-        <i class="bar"></i>
+
+    <button id="getp">Get Paragraph Width</button>
+    <button id="getd">Get Document Width</button>
+    <button id="getw">Get Window Width</button>
+    <div>&nbsp;</div>
+    <p>
+        Sample paragraph to test width
+    </p>
+
+    <h4>右侧固定-DOM顺序和视觉一致</h4>
+    <div class="box box-right-same">
+        <div class="full">
+            <p>DOM文档流中，图片定宽在右侧，视觉呈现也在右侧，顺便表现此时一致。</p>
+        </div>
+        <img src="d:/boy.jpg" class="img">
     </div>
-    <p><button id="button">再增加一条数据</button></p>
-    <dot>...</dot>
-    <div class="box1">
-        <span>xx</span>
-        <span></span>
-    </div>
+    <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ul>
+    <script>
+        function showWidth(ele, w) {
+            $("div").text("The width for the " + ele + " is " + w + "px.");
+        }
+        $("#getp").click(function() {
+            showWidth("paragraph", $("p").width());
+        });
+        $("#getd").click(function() {
+            showWidth("document", $(document).width());
+        });
+        $("#getw").click(function() {
+            showWidth("window", $(window).width());
+        });
+    </script>
 
 </body>
 
