@@ -5,48 +5,15 @@
     <meta charset="utf-8">
     <title>width demo</title>
     <style>
-        body {
-            background: yellow;
-        }
-        
-        button {
-            font-size: 12px;
-            margin: 2px;
-        }
-        
-        p {
-            margin-right: 140px;
-        }
-        
-        div {
-            color: red;
-            font-weight: bold;
-        }
-        /* 右浮动，图片DOM在后，和视觉表现一致 */
-        
-        .box-right-same>.full {
-            width: 100%;
-            float: left;
-        }
-        
-        .box-right-same>.full>p {
-            margin-right: 220px;
-        }
-        
-        .box-right-same>img {
-            float: left;
-            margin-left: -220px;
-        }
-        
         .box {
-            overflow: hidden;
+            /* line-height: 96px; */
+            background: aliceblue;
+            width: 410px;
         }
         
-        li {
-            float: left;
-            margin-right: 10px;
-            width: 100px;
-            border: 1px solid darkkhaki;
+        .box span {
+            width: 200px;
+            display: inline-block;
         }
     </style>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
@@ -54,40 +21,13 @@
 
 <body>
 
-    <button id="getp">Get Paragraph Width</button>
-    <button id="getd">Get Document Width</button>
-    <button id="getw">Get Window Width</button>
-    <div>&nbsp;</div>
-    <p>
-        Sample paragraph to test width
-    </p>
-
-    <h4>右侧固定-DOM顺序和视觉一致</h4>
-    <div class="box box-right-same">
-        <div class="full">
-            <p>DOM文档流中，图片定宽在右侧，视觉呈现也在右侧，顺便表现此时一致。</p>
-        </div>
-        <img src="d:/boy.jpg" class="img">
+    <div class="box">
+        <img src="d:/boy.jpg" alt="">
+        <img src="d:/boy.jpg" alt="">
+        <img src="d:/boy.jpg" alt="">
+        <span></span>
+        <span></span>x
     </div>
-    <ul>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-    </ul>
-    <script>
-        function showWidth(ele, w) {
-            $("div").text("The width for the " + ele + " is " + w + "px.");
-        }
-        $("#getp").click(function() {
-            showWidth("paragraph", $("p").width());
-        });
-        $("#getd").click(function() {
-            showWidth("document", $(document).width());
-        });
-        $("#getw").click(function() {
-            showWidth("window", $(window).width());
-        });
-    </script>
 
 </body>
 
