@@ -5,15 +5,18 @@
     <meta charset="utf-8">
     <title>width demo</title>
     <style>
-        .box {
-            /* line-height: 96px; */
-            background: aliceblue;
-            width: 410px;
+        .dashed {
+            height: 1px;
+            background: linear-gradient(to right, #000, #000 2px, transparent 2px, transparent);
+            background-size: 4px 100%;
         }
         
-        .box span {
-            width: 200px;
-            display: inline-block;
+        .box {
+            width: 600px;
+        }
+        
+        img {
+            float: left;
         }
     </style>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
@@ -21,12 +24,11 @@
 
 <body>
 
+    <div class="dashed"></div>
     <div class="box">
-        <img src="d:/boy.jpg" alt="">
-        <img src="d:/boy.jpg" alt="">
-        <img src="d:/boy.jpg" alt="">
-        <span></span>
-        <span></span>x
+        <img src="D:\boy.jpg" alt="" srcset="">
+        <p>简介：本剧改编自晋江大神级作家Priest同名小说。万年前，为了抢夺海星的生存资源， 地星人中的极端分子大举进攻整个海星，引发了海星人和地星人的史前大战。为了与拥有 异能的地星人抗衡，海星人打造了四件圣器，并在领袖“昆仑”和地星和平派领袖黑袍使 的带领下，“海星正义联盟”最终取得了大战的胜利，地星人退回到地核中生活。大战过后 ，“昆仑”失踪，黑袍使信守着对“昆仑”的承诺，成为地星的看守者。海星人和地星人从此 相安无事，维持了近万年的和平。直到四圣器失踪，能量减弱，不断有地星人从地核逃
+            到地面上，利用异能为非作歹。为此，海星高层成立了特别调查处 ，负责抓住这些地星人，并将其送回“地星”。三十五世纪的今天，海星的中心龙城发生 了层出不穷的诡异事件，在调查过程中，一个看似普通的生物学教授——沈巍，进入了特别调查处和众人的视线中。沈巍的真实身份，是地星的看守者——黑袍使，而沈巍对于赵云澜，似乎也掩藏着秘密……随着调查的深入，一系列诡异事件的源头，似乎都与“四圣器”有着千丝万缕的关系。为了夺取四圣器，地星的恶势力蠢蠢欲动，阴谋背后，赵云澜的真实身份、沈巍与幕后黑手的神秘联系，也逐一揭开。/p>
     </div>
 
 </body>

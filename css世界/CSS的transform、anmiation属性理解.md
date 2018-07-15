@@ -30,8 +30,32 @@ skew 变换后的坐标计算公式如下：
 
 ## rotate 旋转变换
 
-旋转方向可以相邻轴线的方向判断，与轴线方向相同。
+<span style="color:red;font-weight:bold">\*注意：css3 中坐标轴是相对于物体，当元素旋转的时候，坐标轴页跟着旋转。</span>
 
-- 即 rotateX 的正方向与 Z 轴的正方向一致（垂直屏幕向里）
-- rotateY 的正方向与 X 轴的正方向一致（水平向右）
-- rotateZ 的正方向与 Y 轴的正方向一致（垂直向下）
+### 左手坐标系
+
+伸出左手，让拇指和食指成“L”形，大拇指向右，食指向上，中指指向前方。这样我们就建立了一个左手坐标系，拇指、食指和中指分别代表 X、Y、Z 轴的正方向。如下图
+
+![左手坐标系](img/左手坐标系.png)
+
+### CSS 中的 3D 坐标系
+
+CSS3 中的 3D 坐标系与上述的 3D 坐标系是有一定区别的，相当于其绕着 X 轴旋转了 180 度，如下图
+
+![css坐标系](img/css坐标系.png)
+
+rotate(30deg) 即为 rotateZ(30deg)
+
+[二维变换矩阵](!https://www.zhangxinxu.com/wordpress/2012/06/css3-transform-matrix-%E7%9F%A9%E9%98%B5/)
+
+![二维变换矩阵](img/二维变换矩阵.png)
+
+假设角度为 `θ`
+martix 的参数如下
+
+`matrix(cosθ,sinθ,-sinθ,cosθ,0,0)`
+
+```math
+x' = x*cosθ-y*sinθ+0 = x*cosθ-y*sinθ
+y' = x*sinθ+y*cosθ+0 = x*sinθ+y*cosθ
+```
