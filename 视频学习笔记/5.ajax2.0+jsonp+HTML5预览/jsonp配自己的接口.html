@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<body>
+	<script>
+		$.ajax({
+			url:'http://localhost:8000/',
+			data:{a:2,b:3},
+			dataType:'jsonp',
+			jsonp:'cb',
+			success(num){
+				alert(num)
+			},
+			error(){
+				alert('error')
+			}
+		})
+	</script>
+
+</body>
+</html>

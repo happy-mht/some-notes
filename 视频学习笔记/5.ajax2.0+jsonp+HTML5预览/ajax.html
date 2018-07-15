@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+</head>
+<body>
+<script type="text/javascript">
+	window.onload=function () {
+		var oBtn = document.getElementById('btn1');
+		//let oF1 = document.getElementById('f1');
+
+		oBtn.onclick = function () {
+			// var formData = new FormData();
+			// formData.set('a',12);
+			// formData.set('f1',oF1);
+			var xhr = new XMLHttpRequest();
+           
+			xhr.open('post','http://localhost:8000/',true);
+			//xhr.send(formData)
+			xhr.send()
+
+			xhr.onreadystatechange=function () {
+				if(xhr.readyState==4){
+					//xhr.status = 0 ， 表示通信过程失败，服务器不会返回0
+					alert(xhr.status)
+					
+				}
+			}
+			
+		}
+	}
+</script>
+hhh
+<input type="file" name="" id="f1">
+<input type="button" value="ajax请求" id="btn1"></input>
+</body>
+</html>

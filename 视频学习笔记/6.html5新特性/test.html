@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<input type="button" name="" id="btn" value="定位">
+<script type="text/javascript">
+	var oBtn = document.getElementById('btn');
+	oBtn.onclick = function () {
+		if(window.navigator.geolocation){
+			navigator.geolocation.getCurrentPosition(function (res) {
+			    console.log(res)
+				alert('succes');
+			},function(){
+				console.log(err)
+				alert('error')
+			})
+		}
+	}
+</script>
+</body>
+</html>

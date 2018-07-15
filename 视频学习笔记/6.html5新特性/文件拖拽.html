@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>文件拖拽</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		#div1 {
+          width: 200px;
+          background-color: #ccc;
+          border: 1px solid;
+          margin: 50px auto;
+          height: 200px;
+          text-align: center;
+          line-height: 200px;
+		}
+	</style>
+</head>
+<body>
+ <div id="div1">
+ 	将文件拖拽至此处
+ </div>
+ <img id="img1">
+ <script type="text/javascript">
+ 	window.onload = function (argument) {
+ 		let oDiv = document.getElementById('div1');
+        let oImg = document.getElementById('img1')
+
+ 		// ondragenter
+ 		// ondragleave
+ 		// ondragover  悬停
+ 		// ondrop
+ 		oDiv.ondragenter = function (argument) {
+ 			oDiv.innerHTML = '释放鼠标';
+ 		}
+ 		oDiv.ondragleave = function (argument) {
+ 			oDiv.innerHTML = '将文件拖拽至此处';
+ 		}
+ 		oDiv.ondragover = function (ev) {
+ 			ev.preventDefault()
+ 			console.log('ondragover');
+ 		}
+ 		oDiv.ondrop = function (event) {
+ 			console.log(event.dataTransfer.files);
+            let file = event.dataTransfer.files[0]；
+            console.log(file);
+            //file.type
+ 			//读取;
+            let reader = new FileReader();
+
+            reader.onload = function () {
+                oImg.src = this.result;
+                console.info(this.result);
+
+                alert('read success')
+            }
+            reader.onerror = function () {
+                 alert('read error')
+            }
+
+            reader.readAsDataURL(file)
+ 			event.preventDefault()
+ 		}
+ 		// oDiv.addEventListener('drop', ev=>{
+ 		// 	ev.preventDefault()
+ 		// })
+ 		//HTML5 新出来的事件，是DOM level3事件，最好使用 addEventListener() 绑定事件
+ 	}
+ </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+config/
+.project
+node_modules/
+dist/
+/index.html
+/webpack.config.js
+index.html
+webpack.config.js
+
+/build.xml
+/dump.rdb
+npm-debug.log
+
+/nohup.out
+/.settings

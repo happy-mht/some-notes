@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>canvas</title>
+    <meta charset="utf-8">
+</head>
+<body>
+  <canvas id="c1" width="300" height="300"></canvas>
+  <script type="text/javascript">
+      window.onload = function () {
+          let cv = document.getElementById('c1');
+          let gd = cv.getContext('2d');
+
+          gd.moveTo(100,100);
+          gd.lineTo(300,100);
+
+          gd.strokeStyle = 'red';
+          gd.stroke();
+          
+          //gd.beginPath() //清除之前的路径
+          //gd.moveTo(100,300);
+          gd.lineTo(100,300);
+          gd.closePath()
+
+          gd.strokeStyle = 'blue';
+          gd.stroke();
+
+
+      }
+  </script>
+</body>
+</html>

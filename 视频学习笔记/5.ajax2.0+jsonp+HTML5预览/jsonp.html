@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script>
+    	//show({q:"dd",p:false,s:["dd373游戏交易平台","大麦网","dd373","当当网","大众点评","ddp","ddns","ddos","ddu","ddl"]});
+    	function show(data) {
+    		console.log(data)
+    		let oul = document.getElementById('uli');
+    		oul.innerHTML = ''
+    		data.s.forEach(str=>{
+    			let li = document.createElement('li');
+    			li.innerHTML=str;
+
+    			oul.appendChild(li)
+
+    		})
+	    }
+    	window.onload=function () {
+    		let oText = document.getElementById('search');
+
+    		let oul = document.getElementById('uli');
+
+    		oText.oninput=function () {
+    			let oS = document.createElement('script')
+    			oS.src = "https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=dd&cb=show";
+    			document.head.appendChild(oS);
+    		}
+
+    	}
+    </script>
+    <!-- <script src="https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=dd&cb=show"></script> -->
+    <!-- 引入这个地址的作用和引入下面的作用相同-->
+   <!--  <script>
+   	 show({q:"dd",p:false,s:["dd373游戏交易平台","大麦网","dd373","当当网","大众点评","ddp","ddns","ddos","ddu","ddl"]});
+   </script> -->
+   
+    
+</head>
+<body>
+  <input type="text" name="" id="search">
+  <ul id="uli">
+  	
+  </ul>
+</body>
+</html>
