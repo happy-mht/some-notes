@@ -42,7 +42,7 @@ skew 变换后的坐标计算公式如下：
 
 CSS3 中的 3D 坐标系与上述的 3D 坐标系是有一定区别的，相当于其绕着 X 轴旋转了 180 度，如下图
 
-![css坐标系](img/css坐标系.png)
+![css坐标系](img/CSS坐标系.png)
 
 rotate(30deg) 即为 rotateZ(30deg)
 
