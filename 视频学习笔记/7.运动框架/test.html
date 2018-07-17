@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>运动框架</title>
+	<style>
+		div{
+			position: relative;
+			width: 100px;
+			height: 100px;
+			background: lightgreen;
+			margin-bottom: 20px;
+		}
+		#d1{
+			opacity: 0;
+		}
+	</style>
+	<script src="move.js"></script>
+</head>
+<body>
+  <div id="d1"></div>
+  <div id="d2"></div>
+  <div></div>
+  <div class="d3"></div>
+  <script>
+  	let doms = _$('div')
+  	//doms.moveTo({left:400,width:150})
+  	// _$('#d1').fadeIn(1000)
+  	_$('div').fadeOut(1000)
+  </script>
+</body>
+</html>
