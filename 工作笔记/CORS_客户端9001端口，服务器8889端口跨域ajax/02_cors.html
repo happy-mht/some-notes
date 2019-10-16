@@ -1,0 +1,36 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+     服务器是9001端口
+    <button id="btn">点我发cors</button>
+    <script type="text/javascript">
+        // 点击事件
+        document.querySelector('#btn').onclick = function () {
+          // 发请求
+            var xhr = new XMLHttpRequest();
+            xhr.open('post','http://localhost:8889/cors');
+            // 1:options触发点1: 非简单请求方式
+            // xhr.open('put','http://localhost:8889/cors');
+
+            //2:options触发点2: 加入自定义的头
+            // xhr.setRequestHeader('my-token','abcd');
+
+            // 3: 当content-type 是非键值对 application/json
+            xhr.setRequestHeader('content-type','application/json');
+            // 携带cookie
+            xhr.withCredentials = true;   
+            xhr.send('a=1');
+            xhr.onreadystatechange = function () {
+              if(xhr.readyState === 4 && xhr.status === 200) {
+                alert(xhr.responseText);
+              }
+            }
+        }
+
+
+    </script>
+</body>
+</html>
