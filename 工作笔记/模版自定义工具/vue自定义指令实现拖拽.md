@@ -7,11 +7,11 @@
 Vue.directive('dragx', (el, binding, vnode) => {
   //  默认参数
   let defaultOpts = {
-    dragDirection: 'n, e, s, w, ne, se, sw, nw, all',
     dragContainerId: '', //
     dragBarClass: '', // 类选择器
     canDrag: true,
     canResize: true,
+    zoomsize: 1, // 模版的缩放比例
     multiSelect: false
   }
   let isMove = false
@@ -30,7 +30,7 @@ Vue.directive('dragx', (el, binding, vnode) => {
   }
 
   let getStyleNumValue = (style, key) => parseInt(style.getPropertyValue(key), 10)
-  //  设置约束范围
+  // 设置拖拽的范围
   function setConstraint (data) {
     if (cfg.dragContainerId) {
       if (data.left <= 0) data.left = 0
@@ -53,9 +53,9 @@ Vue.directive('dragx', (el, binding, vnode) => {
   }
 
   el.onmousedown = e => {
-    let clickId = (e.target || e.srcElement).id
+    // DOM元素的实际坐标要除以模版的缩放比例
     let posData = {
-      x: e.pageX, y: e.pageY
+      x: e.pageX / cfg.zoomsize, y: e.pageY / cfg.zoomsize
     }
     el.onmouseup = e => {
       // dom元素选中时发送active事件
@@ -76,8 +76,11 @@ Vue.directive('dragx', (el, binding, vnode) => {
     let data
     let tableStyle
 
-    style = window.getComputedStyle(el)
-    rect = el.getBoundingClientRect()
+    // 缩放时取pageX和pageY都要除以zoomsize
+    style = window.getComputedStyle(el) //style的值与缩放无关
+    rect = el.getBoundingClientRect() 
+    // getBoundingClientRect 返回元素的大小及其相对于视口的位置。缩放时，如果没有出现滚动条 rect.left 和 rect.top 没变
+    // getBoundingClientRect 当计算边界矩形时，会考虑视口区域（或其他可滚动元素）内的滚动操作，也就是说，当滚动位置发生了改变，top和left属性值就会随之立即发生变化（因此，它们的值是相对于视口的，而不是绝对的）。如果你需要获得相对于整个网页左上角定位的属性值，那么只要给top、left属性值加上当前的滚动位置（通过window.scrollX和window.scrollY），这样就可以获取与当前的滚动位置无关的值。
     data = {
       width: getStyleNumValue(style, 'width'),
       height: getStyleNumValue(style, 'height'),
@@ -87,11 +90,12 @@ Vue.directive('dragx', (el, binding, vnode) => {
       borderTop: getStyleNumValue(style, 'border-top-width'),
       borderRight: getStyleNumValue(style, 'border-right-width'),
       borderBottom: getStyleNumValue(style, 'border-bottom-width'),
-      deltX: e.pageX - rect.left,
-      deltY: e.pageY - rect.top,
+      deltX: e.pageX / cfg.zoomsize - rect.left, // 实际的位移
+      deltY: e.pageY / cfg.zoomsize - rect.top,
       startX: rect.left,
       startY: rect.top
     }
+  
     if (el.id.indexOf(THSIGN) > -1 || el.id.indexOf(TDSIGN) > -1) {
       let table = document.getElementById(el.id.split(SEPARATOR)[0])
       tableStyle = window.getComputedStyle(table)
@@ -102,8 +106,8 @@ Vue.directive('dragx', (el, binding, vnode) => {
     document.onmousemove = edom => {
       if (edom.ctrlKey) return
       if (isResize) {
-        data.width = Math.round(edom.pageX - data.startX + data.borderLeft + data.borderRight)
-        data.height = Math.round(edom.pageY - data.startY + data.borderBottom + data.borderTop)
+        data.width = Math.round(edom.pageX / cfg.zoomsize - data.startX + data.borderLeft + data.borderRight)
+        data.height = Math.round(edom.pageY / cfg.zoomsize - data.startY + data.borderBottom + data.borderTop)
       }
       // 处理组件 移动
       if (isMove && cfg.canDrag && (cfg.active || cfg.multiSelect)) {
@@ -127,7 +131,6 @@ Vue.directive('dragx', (el, binding, vnode) => {
       }
       if (cfg.multiSelect) {
         let domData = {
-          el: clickId,
           x: edom.pageX,
           y: edom.pageY
         }
@@ -168,14 +171,53 @@ Vue.directive('dragx', (el, binding, vnode) => {
 })
 ```
 
+页面监听mousedown事件
+```js
+  mousedown (e) {
+    let currId = (e.target || e.srcElement).id
+    if (this.choosenDomIds.indexOf(currId == -1)) {
+      this.eX = e.x / this.zoomsize  // 获取鼠标的坐标时也要除以 zoomsize
+      this.eY = e.y / this.zoomsize
+    }
+    this.prevX = e.pageX
+    this.prevY = e.pageY
+    this.prevState = JSON.parse(JSON.stringify(this.customDoms))
+    let id = (e.target || e.srcElement).id
+    if (id.indexOf(SEPARATOR) == -1 && this.$refs.table) {
+      this.$refs.table.forEach(table => {
+        table.activateDom({ id: '' })
+      })
+    }
+    let obj = findDomByDomId(this.customDoms, id)
+    if (!obj) {
+      this.$emit('getCurrentDom', '')
+      this.currentDataId = ''
+    }
+    if (e.ctrlKey && obj) {
+      obj.multiAcive ? this.$set(obj, 'multiAcive', false) : this.$set(obj, 'multiAcive', true)
+      this.choosenDoms.push(obj)
+      this.choosenDomIds.push(id)
+    }
+  }
+```
+高亮选中的元素
+```js
+  activateDom (id, x, y) { 
+    // 因为main.js 中传过来的实际的位置，所以需要乘以 zoomsize
+    this.eX = x * this.zoomsize
+    this.eY = y * this.zoomsize
+    this.currentDataId = id
+    this.$emit('getCurrentDom', this.currentDataId)
+  },
+```
 2. [自定义事件](https://developer.mozilla.org/zh-CN/docs/Web/API/CustomEvent)
 
    在vue组件使用自定义指令并添加事件监听器
 
    > 如果指令需要多个值，可以传入一个 JavaScript 对象字面量。记住，指令函数能够接受所有合法的 JavaScript 表达式。
 
-   ```vue
-   <div v-dragx="{ dragBarClass: 'drag', dragContainerId: 'page', multiSelect, active }"
+   ```html
+   <div v-dragx="{ dragBarClass: 'drag', dragContainerId: 'page', multiSelect, active, zoomsize }"
        @bindUpdate="bindUpdate"
        @bindActive="activeDom"
        @bindUpdateDoms="bindUpdateDoms"
@@ -195,7 +237,9 @@ Vue.directive('dragx', (el, binding, vnode) => {
 | dragContainerId | 限制dom元素的拖拽范围                            |
 | multiSelect     | 当前是否有多个元素                               |
 | active          | 但前元素是否被选中，只有选中的元素才可以拖拽     |
-```vue
+| zoomsize        | 模版缩放的比例                              |
+
+```html
 <template>
   <div v-dragx="{ dragBarClass: 'drag', dragContainerId: 'page', multiSelect, active }"
     @bindUpdate="bindUpdate"
@@ -337,7 +381,5 @@ export default {
 3. [vuex实现状态管理](https://vuex.vuejs.org/zh/)
 
    因为涉及到多个组件的通信，因此使用vuex，把模板信息和执行栈全部保存在vuex中
-
-最终实现的效果如下图所示
-
-![Snipaste_2019-01-28_10-13-21](D:\Snipaste_2019-01-28_10-13-21.png)
+   
+![事件流](模版自定义之事件流.jpg)
