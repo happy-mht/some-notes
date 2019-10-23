@@ -1,8 +1,15 @@
-## vue 使用自定义指令实现拖拽
+## 自定义模版之元素拖拽(resize+move)
 
-需求背景，工作中需要实现一个自定义打印模板的需求，能够实现**单个及多个**dom元素的同时拖拽，也能通过外部的input元素修改dom元素的样式。在npm和GitHub上找了各种已有的vue组件，不够灵活，效果都不是自己想要的
+需求背景，实现自定义打印模板，能够实现**单个及多个**dom元素的同时拖拽，也能通过外部的input元素修改dom元素的样式。
+使用的相关技术
 
-1. [vue自定义指令](https://cn.vuejs.org/v2/guide/custom-directive.html)
+1. [CustomEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/CustomEvent)
+2. [vue自定义指令](https://cn.vuejs.org/v2/guide/custom-directive.html)
+3. [EventTarget.dispatchEvent](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/dispatchEvent)
+4. [Element.getBoundingClientRect()方法返回元素的大小及其相对于视口的位置。](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getBoundingClientRect)
+5. [vuex实现状态管理](https://vuex.vuejs.org/zh/)
+
+### 注册全局指令
 ```js
 Vue.directive('dragx', (el, binding, vnode) => {
   //  默认参数
@@ -172,7 +179,9 @@ Vue.directive('dragx', (el, binding, vnode) => {
 ```
 
 页面监听mousedown事件
-```js
+```html
+<div class="page" id="page" @mousedown="mousedown" @mouseup="mouseup" :style="`zoom: ${zoom}%`">
+<script>
   mousedown (e) {
     let currId = (e.target || e.srcElement).id
     if (this.choosenDomIds.indexOf(currId == -1)) {
@@ -199,35 +208,11 @@ Vue.directive('dragx', (el, binding, vnode) => {
       this.choosenDomIds.push(id)
     }
   }
+</script>
 ```
-高亮选中的元素
-```js
-  activateDom (id, x, y) { 
-    // 因为main.js 中传过来的实际的位置，所以需要乘以 zoomsize
-    this.eX = x * this.zoomsize
-    this.eY = y * this.zoomsize
-    this.currentDataId = id
-    this.$emit('getCurrentDom', this.currentDataId)
-  },
-```
-2. [自定义事件](https://developer.mozilla.org/zh-CN/docs/Web/API/CustomEvent)
-
-   在vue组件使用自定义指令并添加事件监听器
+### 2. 在vue组件使用自定义指令并添加事件监听器
 
    > 如果指令需要多个值，可以传入一个 JavaScript 对象字面量。记住，指令函数能够接受所有合法的 JavaScript 表达式。
-
-   ```html
-   <div v-dragx="{ dragBarClass: 'drag', dragContainerId: 'page', multiSelect, active, zoomsize }"
-       @bindUpdate="bindUpdate"
-       @bindActive="activeDom"
-       @bindUpdateDoms="bindUpdateDoms"
-       @bindFinishMove="pushStackByDom"
-       @bindFinishMoveDoms="pushStackByDoms"
-       :style="style"
-       :id="uId"
-       class="drag-wrap">
-   </div>
-   ```
 
 字段说明
 
@@ -378,8 +363,5 @@ export default {
 }
 </style>
 ```
-3. [vuex实现状态管理](https://vuex.vuejs.org/zh/)
 
-   因为涉及到多个组件的通信，因此使用vuex，把模板信息和执行栈全部保存在vuex中
-   
 ![事件流](模版自定义之事件流.jpg)
