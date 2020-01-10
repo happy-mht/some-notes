@@ -248,7 +248,7 @@ export default {
         : this.$store.dispatch('RESIZE_TABLE_BORDER', { id: this.uId, ...data })
     },
     bindUpdateDoms (e) {
-      this.$emit('movingDomsByCells', e.detail)
+      this.$emit('movingDoms', e.detail)
     },
     pushStack (e) {
       let data = event.detail
@@ -257,7 +257,7 @@ export default {
         : this.$store.dispatch('RESIZE_TABLE_BORDER', { prevSize: this.prevSize, id: this.uId, ...data })
     },
     pushStackByDoms (e) {
-      this.$emit('finishMoveByCells', e)
+      this.$emit('finishMoveDoms', e)
     }
   }
 }
@@ -277,10 +277,10 @@ export default {
   color: #666;
 }
 </style>
-
 ```
 
 ## TableResize.vue
+
 ```html
 <template>
   <table
@@ -297,7 +297,6 @@ export default {
           :key="`${uId}${separator}th${separator}${index}`"
           :class="{ active: active && uId+separator+'th'+separator+item.id == currentDataId, current: selectall || item.multiAcive }">
           <DragResizeCell
-            v-bind="$attrs"
             v-on='$listeners'
             :size="item.domSize"
             :key="item.id"
@@ -307,11 +306,8 @@ export default {
             :unit="item.unit"
             :id="`${uId}${separator}th${separator}${item.id}`"
             :class="['edit-status', item.type == 'barcode' && 'barcode', item.type == 'qrcode' && 'qrcode', item.type == 'textBarcode' && 'text-barcode']"
-            @movingDomsByCells="movingDoms"
-            @finishMoveByCells="finishMove"
-            @activated="activateDom"
-            @activeDoms="activeDoms">
-            <img v-if="item.type=='img'" src="item.src">
+            @activated="activateDom">
+            <img v-if="item.type=='img' && item.src" src="item.src">
             {{item.text}}
           </DragResizeCell>
         </th>
@@ -323,7 +319,6 @@ export default {
         :key="`${uId}${separator}tbody${separator}${index}`"
         :class="{active: active &&  uId+separator+'td'+separator+item.id == currentDataId, current: selectall || item.multiAcive, barcode_td: item.type == 'img'}">
           <drag-resize-cell
-            v-bind="$attrs"
             v-on='$listeners'
             :key="item.id"
             :size="item.domSize"
@@ -334,11 +329,8 @@ export default {
             :isVariable="item.type == 'variable'"
             :id="`${uId}${separator}td${separator}${item.id}`"
             :class="['edit-status', item.type == 'barcode' && 'barcode', item.type == 'qrcode' && 'qrcode', item.type == 'textBarcode' && 'text-barcode']"
-            @activated="activateDom"
-            @activeDoms="activeDoms"
-            @movingDomsByCells="movingDoms"
-            @finishMoveByCells="finishMove">
-            <img v-if="item.type=='img'" src="item.src">
+            @activated="activateDom">
+            <img v-if="item.type=='img' && item.src" src="item.src">
             <template>{ {{item.text}} }</template>
           </drag-resize-cell>
         </td>
@@ -402,7 +394,7 @@ export default {
       return this.$store.state.selectall
     },
     captionFont: function () {
-      return this.columns[0] ? this.columns[0].domSize.fontSize + 'pt' : '10pt'
+      return this.columns[0] ? this.columns[0].domSize.fontSize + 'pt' : '9pt'
     },
     tableBorder: function () {
       return this.border == 'horizontal' ? 0 : this.border
@@ -421,17 +413,7 @@ export default {
   },
   methods: {
     activateDom (id, x, y) {
-      // this.$emit('activated')
       this.currentDataId = id
-    },
-    activeDoms (e) {
-      this.$emit('activeDoms', e)
-    },
-    movingDoms (e) {
-      this.$emit('movingDoms', e)
-    },
-    finishMove (e) {
-      this.$emit('finishMoveDoms', e)
     }
   }
 }
@@ -481,11 +463,22 @@ td {
 <template>
   <div class="page" id="page" @mousedown="mousedown" @mouseup="mouseup" :style="`zoom: ${zoom}%`">
     <template v-for="item in customDoms" >
+      <TableBorder v-if="item.type == 'table-border'"
+        ref="table"
+        :key="item.id"
+        :tableData="item.tableData"
+        :uId="item.id"
+        :type="item.type"
+        :posStyle="item.domSize"
+        :multiSelect="multiSelect"
+        :active="currentDataId.indexOf(item.id) > -1"
+        @movingDoms="movingDoms"
+        @finishMoveDoms="finishMoveDoms"
+        @activated="activateDom">
+      </TableBorder>
       <TableResize
         ref="table"
-        v-if="item.type == 'table'"
-        v-bind="$attrs"
-        v-on='$listeners'
+        v-else-if="item.type == 'table'"
         :key="item.id"
         :border="item.domSize.border"
         :tableData="item.tableData"
@@ -501,6 +494,22 @@ td {
         @finishMoveDoms="finishMoveDoms"
         @activated="activateDom">
       </TableResize>
+      <DragResize
+        v-else
+        dragContainerId = 'page'
+        @activated="activateDom"
+        @movingDoms="movingDoms"
+        @finishMoveDoms="finishMoveDoms"
+        @resizing="onResize"
+        :uId="item.id"
+        :key="item.id"
+        :size="item.domSize"
+        :active="item.id == currentDataId"
+        :multiSelect="multiSelect"
+        :isVariable="item.type=='variable'"
+        :item="item"
+        :class="[item.type != 'line' && 'edit-status', item.id == currentDataId && 'active', (item.multiAcive || selectall) && 'current', item.type == 'barcode-img' && 'barcode', item.type == 'qrcode-img' && 'qrcode', item.type == 'textBarcode-img' && 'text-barcode']">
+      </DragResize>
     </template>
   </div>
 </template>
@@ -508,7 +517,7 @@ td {
 import DragResize from '@/components/DragResize'
 import TableResize from '@/components/TableResize'
 import TableBorder from '@/components/TableBorder'
-import { findDomByDomId, getPrevState } from '@/utils/'
+import { findDomByDomId, getPrevState, findDomByDomIdExceptCell } from '@/utils/'
 import { SEPARATOR } from '@/utils/constant'
 
 export default {
@@ -553,6 +562,7 @@ export default {
       if (newV) {
         this.choosenDoms = this.customDoms.filter(div => div.tag != 'table')
         let tables = this.customDoms.filter(div => div.tag == 'table')
+        this.choosenDoms.push(...tables) // 表格也需要修改位置信息
         tables.forEach(table => {
           if (table.key !== 'tableBorder') {
             this.choosenDoms.push(...table.columns)
@@ -568,15 +578,8 @@ export default {
   },
   methods: {
     movingDoms (e) {
-      if (this.choosenDomIds.indexOf(e.el) == -1 && !this.selectall) return
-      let changeDoms = []
-      let tables = {}
-      this.choosenDoms.forEach(dom => {
-        if ((dom.tag == 'th' || dom.tag == 'td') && !tables[dom.tableId]) {
-          tables[dom.tableId] = this.customDoms.find(div => div.id == dom.tableId)
-        } else changeDoms.push(dom)
-      })
-      changeDoms.push(...Object.values(tables))
+      if (this.choosenDomIds.indexOf(e.id) == -1 && !this.selectall) return
+      let changeDoms = this.choosenDoms
       this.$store.dispatch('MOVE_MULTI', {
         changeDoms,
         offsetX: e.x - this.eX,
@@ -586,15 +589,7 @@ export default {
       this.eY = e.y
     },
     finishMoveDoms (e) {
-      let changeDoms = []
-      let tables = {}
-      this.choosenDoms.forEach(dom => {
-        if ((dom.tag == 'th' || dom.tag == 'td') && !tables[dom.tableId]) {
-          tables[dom.tableId] = this.customDoms.find(div => div.id == dom.tableId)
-        } else changeDoms.push(dom)
-      })
-      changeDoms.push(...Object.values(tables))
-
+      let changeDoms = this.choosenDoms
       let item = {
         prevState: getPrevState(this.prevState),
         changeDoms: changeDoms,
@@ -606,7 +601,6 @@ export default {
       this.eY = e.y
     },
     mousedown (e) {
-      console.log(e)
       let currId = (e.target || e.srcElement).id
       if (this.choosenDomIds.indexOf(currId == -1)) {
         this.eX = e.x / this.zoomsize
@@ -628,8 +622,35 @@ export default {
       }
       if (e.ctrlKey && obj) {
         obj.multiAcive ? this.$set(obj, 'multiAcive', false) : this.$set(obj, 'multiAcive', true)
-        this.choosenDoms.push(obj)
-        this.choosenDomIds.push(id)
+        let index = this.choosenDomIds.findIndex(item => item == id)
+        let tableIndex = this.choosenDomIds.findIndex(item => item == obj.tableId)
+        console.log(index, tableIndex)
+        if (obj.multiAcive) {
+          if (index == -1) {
+            this.choosenDoms.push(obj)
+            this.choosenDomIds.push(id)
+          }
+
+          // 多选时需要修改表格的位置
+          let table = findDomByDomIdExceptCell(this.$store.state.customDoms, obj.tableId)
+          if (table) {
+            if (tableIndex == -1) {
+              this.choosenDomIds.push(obj.tableId)
+              this.choosenDoms.push(table)
+            }
+          }
+        } else {
+          if (index > -1) {
+            this.choosenDoms.splice(index, 1)
+            this.choosenDomIds.splice(index, 1)
+          }
+          // 需要重新获取一遍index
+          tableIndex = this.choosenDomIds.findIndex(item => item == obj.tableId)
+          if (tableIndex > -1) {
+            this.choosenDoms.splice(tableIndex, 1)
+            this.choosenDomIds.splice(tableIndex, 1)
+          }
+        }
       }
     },
     mouseup (e) {
@@ -649,11 +670,24 @@ export default {
         }
       }
     },
+    onCancelOper () {
+      this.$store.commit('SET_SELECT_ALL', false) // 撤销后取消全选
+      this.choosenDoms = []
+      this.choosenDomIds = []
+      this.currentDataId = ''
+    },
     activateDom (id, x, y) {
       this.eX = x * this.zoomsize
       this.eY = y * this.zoomsize
       this.currentDataId = id
       this.$emit('getCurrentDom', this.currentDataId)
+    },
+    onResize: function (e) {
+      if (!this.currentDataId) return
+      let obj = this.customDoms.find(div => div.id == this.currentDataId)
+      if (obj) {
+        this.$emit('changeSize', obj)
+      }
     }
   }
 }
